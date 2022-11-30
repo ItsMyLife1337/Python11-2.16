@@ -3,7 +3,6 @@
 
 import json
 import sys
-import os
 import jsonschema
 
 
@@ -100,8 +99,57 @@ def save_students(file_name, students):
 
 
 def load_students(file_name):
+    schema = {
+        "type": "array",
+        "items": [
+            {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "group": {
+                        "type": "string"
+                    },
+                    "mark": {
+                        "type": "array",
+                        "items": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "integer"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "group",
+                    "mark"
+                ]
+            }
+        ]
+    }
     with open(file_name, "r", encoding="utf-8") as fin:
-        return json.load(fin)
+        loadfile = json.load(fin)
+        validator = jsonschema.Draft7Validator(schema)
+        try:
+            if not validator.validate(loadfile):
+                print("Валидация прошла успешно")
+        except jsonschema.exceptions.ValidationError:
+            print("Ошибка валидации", list(validator.iter_errors(loadfile)))
+            exit()
+    return loadfile
 
 
 def main():
