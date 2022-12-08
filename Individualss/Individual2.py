@@ -15,53 +15,41 @@ def add(students):
         int(input("Оценка за 2 семестр")),
         int(input("Оценка за 3 семестр")),
         int(input("Оценка за 4 семестр")),
-        int(input("Оценка за 5 семестр"))
+        int(input("Оценка за 5 семестр")),
     ]
     # Создать словарь.
-    student = {
-        'name': name,
-        'group': group,
-        'mark': progress
-    }
+    student = {"name": name, "group": group, "mark": progress}
     # Добавить словарь в список.
     students.append(student)
     if len(students) > 1:
-        students.sort(key=lambda item: item.get('group')[::-1])
+        students.sort(key=lambda item: item.get("group")[::-1])
     return students
 
 
 def list(students):
     # Заголовок таблицы.
-    line = '+-{}-+-{}-+-{}-+-{}-+'.format(
-        '-' * 4,
-        '-' * 30,
-        '-' * 20,
-        '-' * 15
-    )
+    line = "+-{}-+-{}-+-{}-+-{}-+".format("-" * 4, "-" * 30, "-" * 20, "-" * 15)
     print(line)
     print(
-        '| {:^4} | {:^30} | {:^20} | {:^15} |'.format(
-            "№",
-            "Ф.И.О.",
-            "Группа",
-            "Успеваемость"
+        "| {:^4} | {:^30} | {:^20} | {:^15} |".format(
+            "№", "Ф.И.О.", "Группа", "Успеваемость"
         )
     )
     print(line)
 
     # Вывести данные о всех студентах.
     for idx, student in enumerate(students, 1):
-        ma = student.get('mark', '')
+        ma = student.get("mark", "")
         print(
-            '| {:^4} | {:<30} | {:<20} | {}.{}.{}.{}.{:<7} |'.format(
+            "| {:^4} | {:<30} | {:<20} | {}.{}.{}.{}.{:<7} |".format(
                 idx,
-                student.get('name', ''),
-                student.get('group', ''),
+                student.get("name", ""),
+                student.get("group", ""),
                 ma[0],
                 ma[1],
                 ma[2],
                 ma[3],
-                ma[4]
+                ma[4],
             )
         )
         print(line)
@@ -72,11 +60,11 @@ def select(students):
     count = 0
     # Проверить сведения студентов из списка.
     for student in students:
-        mark = student.get('mark', '')
+        mark = student.get("mark", "")
         if sum(mark) / max(len(mark), 1) >= 4.0:
             print(
-                '{:>4} {}'.format('*', student.get('name', '')),
-                '{:>1} {}'.format('группа №', student.get('group', ''))
+                "{:>4} {}".format("*", student.get("name", "")),
+                "{:>1} {}".format("группа №", student.get("group", "")),
             )
             count += 1
     if count == 0:
@@ -105,40 +93,22 @@ def load_students(file_name):
             {
                 "type": "object",
                 "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "group": {
-                        "type": "string"
-                    },
+                    "name": {"type": "string"},
+                    "group": {"type": "string"},
                     "mark": {
                         "type": "array",
                         "items": [
-                            {
-                                "type": "integer"
-                            },
-                            {
-                                "type": "integer"
-                            },
-                            {
-                                "type": "integer"
-                            },
-                            {
-                                "type": "integer"
-                            },
-                            {
-                                "type": "integer"
-                            }
-                        ]
-                    }
+                            {"type": "integer"},
+                            {"type": "integer"},
+                            {"type": "integer"},
+                            {"type": "integer"},
+                            {"type": "integer"},
+                        ],
+                    },
                 },
-                "required": [
-                    "name",
-                    "group",
-                    "mark"
-                ]
+                "required": ["name", "group", "mark"],
             }
-        ]
+        ],
     }
     with open(file_name, "r", encoding="utf-8") as fin:
         loadfile = json.load(fin)
@@ -162,13 +132,13 @@ def main():
         command = input(">>> ").lower()
 
         # Выполнить действие в соответствие с командой.
-        if command == 'exit':
+        if command == "exit":
             break
-        elif command == 'add':
+        elif command == "add":
             students = add(students)
-        elif command == 'list':
+        elif command == "list":
             list(students)
-        elif command.startswith('select'):
+        elif command.startswith("select"):
             select(students)
         elif command.startswith("save "):
             # Разбить команду на части для выделения имени файла.
@@ -184,11 +154,11 @@ def main():
             file_name = parts[1]
             # Сохранить данные в файл с заданным именем.
             students = load_students(file_name)
-        elif command == 'help':
+        elif command == "help":
             help_1()
         else:
             print("неизвестная команда {command}", file=sys.stderr)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
