@@ -4,6 +4,7 @@
 import json
 import sys
 import jsonschema
+from jsonschema import validators
 
 
 def add(students):
@@ -111,15 +112,15 @@ def load_students(file_name):
         ],
     }
     with open(file_name, "r", encoding="utf-8") as fin:
-        loadfile = json.load(fin)
+        file = json.load(fin)
         validator = jsonschema.Draft7Validator(schema)
         try:
-            if not validator.validate(loadfile):
+            if not validator.validate(file):
                 print("Валидация прошла успешно")
         except jsonschema.exceptions.ValidationError:
-            print("Ошибка валидации", list(validator.iter_errors(loadfile)))
+            print("Ошибка валидации", file=sys.stderr)
             exit()
-    return loadfile
+    return file
 
 
 def main():
